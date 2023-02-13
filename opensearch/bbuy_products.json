@@ -73,7 +73,7 @@
       "description": {"type": "text", "analyzer": "english"},
       "manufacturer": {"type": "keyword", "ignore_above": "256"},
       "modelNumber": {"type": "keyword", "ignore_above": "256"},
-      "image": {"type": "text"},
+      "image": {"type": "keyword", "ignore_above": 2048},
       "condition": {"type": "keyword", "ignore_above": "256"},
       "inStorePickup": {"type": "boolean"},
       "homeDelivery": {"type": "boolean"},
