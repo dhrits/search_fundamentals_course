@@ -9,7 +9,7 @@ def get_opensearch():
         g.opensearch = OpenSearch(
     hosts=[{'host': 'localhost', 'port': 9200}],
     http_compress=True,  # enables gzip compression for request bodies
-    http_auth=auth,
+    http_auth=('admin', 'admin'),
     # client_cert = client_cert_path,
     # client_key = client_key_path,
     use_ssl=True,

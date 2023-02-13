@@ -94,7 +94,7 @@ def query():
     print("query obj: {}".format(query_obj))
 
     #### Step 4.b.ii
-    response = client.search(
+    response = opensearch.search(
     body=query_obj,
     index="bbuy_products")   # TODO: Replace me with an appropriate call to OpenSearch
     # Postprocess results here if you so desire
@@ -120,18 +120,20 @@ def create_query(user_query, filters, sort="_score", sortDir="desc"):
             }
         },
         'sort': [
-            {'sort': {'order': sortDir}}
-        ]
+            {sort: {'order': sortDir}}
+        ],
         "query": {
            "bool": {
             "must": [
-                "query_string": {
-                    "query": user_query,
-                    "fields": ["name^100", "shortDescription^50", "longDescription^10", "department"],
-                    "phrase_slop": 2
+                {
+                    "query_string": {
+                        "query": user_query,
+                        "fields": ["name^100", "shortDescription^50", "longDescription^10", "department"],
+                        "phrase_slop": 2
+                    }
                 }
             ],
-            "filters": filters
+            "filter": filters
            }
         },
         "aggs": {
