@@ -79,8 +79,7 @@
       "longDescription": {"type": "text", "analyzer": "english"},
       "longDescriptionHtml": {"type": "text", "analyzer": "htmlStripAnalyzer"},
       "features": {
-        "properties": {
-          "feature": {"type": "text", "analyzer": "english"}
+          "type": "text", "analyzer": "english"
         }
       }
     }
