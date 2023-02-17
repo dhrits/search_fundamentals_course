@@ -5,7 +5,7 @@ from flask import (
     Blueprint, redirect, render_template, request, url_for
 )
 
-from week1_finished.opensearch import get_opensearch
+from week1.opensearch import get_opensearch
 
 bp = Blueprint('search', __name__, url_prefix='/search')
 
@@ -54,9 +54,11 @@ def process_filters(filters_input):
     return filters, display_filters, applied_filters
 
 
+
+# Our main query route.  Accepts POST (via the Search box) and GETs via the clicks on aggregations/facets
 @bp.route('/query', methods=['GET', 'POST'])
 def query():
-    opensearch = get_opensearch()
+    opensearch = get_opensearch() # Load up our OpenSearch client from the opensearch.py file.
     # Put in your code to query opensearch.  Set error as appropriate.
     error = None
     user_query = None
@@ -90,7 +92,11 @@ def query():
         query_obj = create_query("*", [], sort, sortDir)
 
     print("query obj: {}".format(query_obj))
-    response = opensearch.search(body=query_obj, index="bbuy_products")
+
+    #### Step 4.b.ii
+    response = opensearch.search(
+    body=query_obj,
+    index="bbuy_products")   # TODO: Replace me with an appropriate call to OpenSearch
     # Postprocess results here if you so desire
 
     #print(response)
@@ -106,36 +112,36 @@ def create_query(user_query, filters, sort="_score", sortDir="desc"):
     print("Query: {} Filters: {} Sort: {}".format(user_query, filters, sort))
     query_obj = {
         'size': 10,
-        "highlight": {
-            "fields": {
-                "name": {},
-                "shortDescription": {},
-                "longDescription": {}
+        'highlight': {
+            'fields': {
+                'name': {},
+                'shortDescription': {},
+                'longDescription': {}
             }
         },
-        "sort":[
-            {sort: {"order": sortDir}}
+        'sort': [
+            {sort: {'order': sortDir}}
         ],
         "query": {
-            "bool": {
-                "must": [
-                    {
-                        "query_string": {
-                            "query": user_query,
-                            "fields": ["name^100", "shortDescription^50", "longDescription^10", "department"],
-                            "phrase_slop": 2
-                        }
+           "bool": {
+            "must": [
+                {
+                    "query_string": {
+                        "query": user_query,
+                        "fields": ["name^100", "shortDescription^50", "longDescription^10", "department"],
+                        "phrase_slop": 2
                     }
-                ],
-                "filter": filters  #
-            }
+                }
+            ],
+            "filter": filters
+           }
         },
         "aggs": {
             "department": {
                 "terms": {
                     "field": "department.keyword",
                     "min_doc_count": 1
-                }
+                },
             },
             "missing_images": {
                 "missing": {
@@ -153,6 +159,7 @@ def create_query(user_query, filters, sort="_score", sortDir="desc"):
                         {"key": "$$$$$", "from": 400, "to": 500},
                         {"key": "$$$$$$", "from": 500},
                     ]
+
                 },
                 "aggs": {
                     "price_stats": {
@@ -160,8 +167,6 @@ def create_query(user_query, filters, sort="_score", sortDir="desc"):
                     }
                 }
             }
-
         }
     }
     return query_obj
-
