@@ -80,7 +80,7 @@ def autocomplete():
             index_name = "bbuy_queries"
             if type == "products":
                 index_name = "bbuy_products"
-            search_response = opensearch.search(body=suggest_obj, index=index_name)
+            search_response = get_opensearch().search(body=suggest_obj, index=index_name)
             print("TODO: implement autocomplete AND instant search")
             if (search_response and search_response['suggest']['autocomplete'] and search_response['suggest']['autocomplete'][0]['length'] > 0): # just a query response
                 results = search_response['suggest']['autocomplete'][0]['options']
