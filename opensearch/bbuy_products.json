@@ -253,23 +253,10 @@
             "type": "keyword",
             "ignore_above": 2048
           },
-          "hyphens": {
-            "type": "text",
-            "analyzer": "smarter_hyphens"
+          "suggest": {
+            "type": "completion"
           }
-        }
-      },
-      "suggest": {
-        "type": "completion",
-        "fields": {
-          "trigrams": {
-            "type": "text",
-            "analyzer": "trigram"
-          },
-          "text": {
-            "type": "text",
-            "analyzer": "english"
-          }
+
         }
       },
       "onSale": {
